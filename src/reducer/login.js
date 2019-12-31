@@ -1,18 +1,22 @@
 import { LoginActionType } from "../action/login";
-
-export const LoginReducer = handleAction(
+import { handleActions } from 'redux-actions';
+const LoginReducer = handleActions(
   {
     [LoginActionType.LOGIN_REQUEST]: (state, action) => ({
       ...state,
-      isLoading: true
+      isLoading: true,
+
     }),
     [LoginActionType.LOGIN_SUCCESS]: (state, action) => ({
       ...state,
-      isLoading: false
+      isLoading: false,
+      isLoggedIn: true
     }),
     [LoginActionType.LOGIN_FAILURE]: (state, action) => ({
       ...state,
       isLoading: false
     })
-  }
+  }, { isLoading: true }
+
 )
+export default LoginReducer

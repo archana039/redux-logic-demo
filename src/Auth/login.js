@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { connect } from "react-redux";
+import { loginReq } from '../action/login';
 
 function Copyright() {
   return (
@@ -46,9 +48,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignIn() {
+const SignIn = (props) => {
   const classes = useStyles();
   const [inputs, setInputs] = useState({});
+  const handleInputChange = (event) => {
+    event.persist();
+    setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
+  }
+  const handleSubmit = (event) => {
+    if (event) {
+      const data = {
+        ...inputs
+      }
+      console.log(data, 'data')
+      event.preventDefault();
+      props.onLogin(data)
+    }
+    console.log(props)
+    // if (props.loginStatus.isLoggedIn) {
+    //   console.log("Hello")
+    // }
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,7 +79,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -71,6 +91,7 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             value={inputs.email}
+            onChange={handleInputChange}
           />
           <TextField
             variant="outlined"
@@ -83,7 +104,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             value={inputs.password}
-            onChange={this.handleInputChange}
+            onChange={handleInputChange}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -116,5 +137,15 @@ export default function SignIn() {
         <Copyright />
       </Box>
     </Container>
+
   );
+
+
 }
+const mapDispatchToProps = (dispatch) => {
+  return { onLogin: (data) => dispatch(loginReq(data)) }
+}
+const mapStateToProps = (state) => {
+  let loginStatus = state.LoginReducer
+}
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

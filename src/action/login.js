@@ -1,3 +1,4 @@
+import { createAction } from 'redux-actions';
 export const LoginActionType = {
   LOGIN_REQUEST: 'LOGIN_REQUEST',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',

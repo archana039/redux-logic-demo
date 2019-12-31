@@ -2,8 +2,10 @@ import { Route, Switch } from 'react-router-dom';
 import React from 'react';
 import { AppRoutes } from '../config/AppRoutes';
 import SignIn from '../Auth/login';
+
 const DefaultLayout = ({ component: Component, layout: Layout, ...rest }) => {
   return (
+
     <Route
       {...rest}
       render={props => (
