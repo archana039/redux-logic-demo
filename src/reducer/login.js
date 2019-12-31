@@ -5,7 +5,6 @@ const LoginReducer = handleActions(
     [LoginActionType.LOGIN_REQUEST]: (state, action) => ({
       ...state,
       isLoading: true,
-
     }),
     [LoginActionType.LOGIN_SUCCESS]: (state, action) => ({
       ...state,

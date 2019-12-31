@@ -2,7 +2,7 @@ import { Route, Switch } from 'react-router-dom';
 import React from 'react';
 import { AppRoutes } from '../config/AppRoutes';
 import SignIn from '../Auth/login';
-
+import SignUp from '../Auth/Signup'
 const DefaultLayout = ({ component: Component, layout: Layout, ...rest }) => {
   return (
 
@@ -20,6 +20,7 @@ export const RenderRoutes = () => {
   return (
     <Switch>
       <Route exact path={AppRoutes.LOGIN} component={SignIn} />
+      <Route exact path={AppRoutes.SIGNUP} component={SignUp} />
     </Switch>
   )
 }

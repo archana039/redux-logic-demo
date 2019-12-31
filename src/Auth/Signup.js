@@ -48,8 +48,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignIn = (props) => {
-  
+const SignUP = (props) => {
+
   const classes = useStyles();
   const [inputs, setInputs] = useState({});
   const handleInputChange = (event) => {
@@ -86,6 +86,19 @@ const SignIn = (props) => {
             margin="normal"
             required
             fullWidth
+            id="name"
+            label="Name"
+            name="email"
+            autoComplete="off"
+            autoFocus
+            value={inputs.name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
             id="email"
             label="Email Address"
             name="email"
@@ -103,6 +116,19 @@ const SignIn = (props) => {
             label="Password"
             type="password"
             id="password"
+            autoComplete="current-password"
+            value={inputs.password}
+            onChange={handleInputChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="ConfirmPassword"
             autoComplete="current-password"
             value={inputs.password}
             onChange={handleInputChange}
@@ -147,7 +173,7 @@ const mapDispatchToProps = (dispatch) => {
   return { onLogin: (data) => dispatch(loginReq(data)) }
 }
 const mapStateToProps = (state) => {
- const  loginStatus = state.LoginReducer
- return {loginStatus}
+  const loginStatus = state.LoginReducer
+  return { loginStatus }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUP);
