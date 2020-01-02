@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
 import { loginReq } from '../action/login';
+import { toast } from "react-toastify";
 
 function Copyright() {
   return (
@@ -49,13 +50,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignIn = (props) => {
-  
   const classes = useStyles();
   const [inputs, setInputs] = useState({});
+  const { loginReducer: { isLoading } } = props;
   const handleInputChange = (event) => {
     event.persist();
     setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
   }
+  console.log(props.loginReducer);
   const handleSubmit = (event) => {
     if (event) {
       // const data = {
@@ -65,10 +67,10 @@ const SignIn = (props) => {
       event.preventDefault();
       props.onLogin(data)
     }
-    console.log(props.loginStatus)
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
     // }
+    
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -118,6 +120,7 @@ const SignIn = (props) => {
             color="primary"
             className={classes.submit}
           >
+            {isLoading ? "loaading..." : ""}
             Sign In
           </Button>
           <Grid container>
@@ -146,8 +149,8 @@ const SignIn = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return { onLogin: (data) => dispatch(loginReq(data)) }
 }
-const mapStateToProps = (state) => {
- const  loginStatus = state.LoginReducer
- return {loginStatus}
-}
+const mapStateToProps = (state) => ({
+  loginReducer: state.LoginReducer
+});
+
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
