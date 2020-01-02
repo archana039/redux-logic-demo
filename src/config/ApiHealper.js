@@ -10,7 +10,7 @@ export default async function FetchFromServer(url, method, data, token) {
     console.log(data,'axiosdata')
     const response = await axios({
       url,
-      baseURL: "http://3.130.81.225/flowhaus/api",
+      baseURL: "http://localhost:8080/api",
       method,
       data,
       headers: {

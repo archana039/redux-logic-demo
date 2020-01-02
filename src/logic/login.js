@@ -1,29 +1,30 @@
 import { createLogic } from 'redux-logic';
-import { loginReq, LoginActionType, loginSuccess } from '../action/login';
+import { loginReq, loginFailure, loginSuccess } from '../action/login';
 import FetchFromServer from '../config/ApiHealper'
-import { toastr } from "react-redux-toastr";
+import { toast } from "react-toastify";
+
 const LoginLogic = createLogic({
-  type: LoginActionType.LOGIN_REQUEST,
+  type: loginReq,
   // your code here, hook into one or more of these execution
   // phases: validate, transform, and/or process
-  process({ getState, action }, dispatch, done) {
+  async process({ getState, action }, dispatch, done) {
 
-    const result =  FetchFromServer('/login', 'POST', action.payload, true)
-      .then(data => {
-        dispatch({ type: LoginActionType.LOGIN_SUCCESS })
-        if (result) {
-          console.log(result, 'result')
-        }
-      })
-
-      .catch(err => {
-        console.error(err); // log since could be render err
-        dispatch({
-          type: LoginActionType.LOGIN_FAILURE, payload: err,
-          error: true
-        })
-      })
-      .then(() => done()); // call done when finished dispatching
+    const result =  await FetchFromServer('auth/login', 'POST', action.payload, true)
+    console.log(result)
+    if (result.data.success) {
+      dispatch(loginSuccess())
+      toast.success(result.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.error(result.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      console.log("hhhhhhhhhhh")
+      dispatch(loginFailure())
+    }
+    done()
+     // call done when finished dispatching
   }
 });
 export default LoginLogic
