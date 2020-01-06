@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,9 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
-import { signUpReq } from '../action/signup';
-import { AppRoutes } from '../config/AppRoutes';
-
+import { useHistory } from "react-router-dom";
+import { AppRoutes } from '../config/AppRoutes'
+import { forgotPasswordReq } from '../action/forgotpassword';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -49,15 +49,47 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignUP = (props) => {
-
+const ForgotPassword = (props) => {
+  let history = useHistory()
   const classes = useStyles();
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('')
   const [inputs, setInputs] = useState({});
+  const { forgotPasswordReducer: { isLoading } } = props;
+  const initialState = {
+    email: "",
+  };
+  const [
+    { email },
+    setState
+  ] = useState(initialState);
+
+
   const handleInputChange = (event) => {
     event.persist();
-    setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
-  }
+    //setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
+    // setEmail(event.target.value)
+    // setPassword(event.target.value)
+    const { name, value } = event.target;
+    setState(prevState => ({ ...prevState, [name]: value }));
 
+  }
+  useEffect(() => {
+    if (props.forgotPasswordReducer && props.forgotPasswordReducer.forgotPassword) {
+      console.log("effect")
+      // history.push(AppRoutes.DASHBOARD)
+      clearState()
+    }
+  }, [props.forgotPasswordReducer.forgotPassword])
+  const clearState = () => {
+    console.log("helloupdate")
+    setState({ ...initialState });
+    // setInputs({});
+    // setEmail('')
+    // setPassword('')
+  }
+  console.log(props.forgotPasswordReducer.isLoading)
+  console.log(props.forgotPasswordReducer)
   const handleSubmit = (event) => {
     if (event) {
       // const data = {
@@ -65,12 +97,12 @@ const SignUP = (props) => {
       // }
       var data = new FormData(event.target)
       event.preventDefault();
-      props.onSignUP(data)
+      props.onForgotPassword(data)
     }
-    console.log(props.loginStatus)
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
     // }
+
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -80,22 +112,9 @@ const SignUP = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign Up
+          Forgot Password
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="Name"
-            name="first_name"
-            autoComplete="off"
-            autoFocus
-            value={inputs.first_name}
-            onChange={handleInputChange}
-          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -104,35 +123,9 @@ const SignUP = (props) => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            // autoComplete="email"
             autoFocus
-            value={inputs.email}
-            onChange={handleInputChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={inputs.password}
-            onChange={handleInputChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="confirm_password"
-            label="Confirm Password"
-            type="password"
-            id="ConfirmPassword"
-            autoComplete="current-password"
-            value={inputs.confirm_password}
+            value={email}
             onChange={handleInputChange}
           />
           <FormControlLabel
@@ -146,16 +139,17 @@ const SignUP = (props) => {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            {isLoading ? "loaading..." : ""}
+            Submit
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href={AppRoutes.FORGOTPASSWORD} variant="body2">
-                Forgot password?
+              <Link href={AppRoutes.LOGIN} variant="body2">
+                Sign In?
               </Link>
             </Grid>
             <Grid item>
-              <Link href={AppRoutes.SIGNUP} variant="body2">
+              <Link href={AppRoutes.FORGOTPASSWORD} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -172,10 +166,10 @@ const SignUP = (props) => {
 
 }
 const mapDispatchToProps = (dispatch) => {
-  return { onSignUP: (data) => dispatch(signUpReq(data)) }
+  return { onForgotPassword: (data) => dispatch(forgotPasswordReq(data)) }
 }
-const mapStateToProps = (state) => {
-  const signUpStatus = state.signUpReducer
-  return { signUpStatus }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(SignUP);
+const mapStateToProps = (state) => ({
+  forgotPasswordReducer: state.ForgotPasswordReducer
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

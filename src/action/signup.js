@@ -4,6 +4,6 @@ export const SignupActionType = {
   SIGNUP_SUCCESS: 'SIGNUP_SUCCESS',
   SIGNUP_FAILURE: 'SIGNUP_FAILURE',
 }
-export const loginReq = createAction(LoginActionType.LOGIN_REQUEST)
-export const loginSuccess = createAction(LoginActionType.LOGIN_SUCCESS)
-export const loginFailure = createAction(LoginActionType.LOGIN_FAILURE)
+export const signUpReq = createAction(SignupActionType.SIGNUP_REQUEST)
+export const signUpSuccess = createAction(SignupActionType.SIGNUP_SUCCESS)
+export const signUpFailure = createAction(SignupActionType.SIGNUP_FAILURE)

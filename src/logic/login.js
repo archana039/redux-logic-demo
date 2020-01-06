@@ -9,22 +9,26 @@ const LoginLogic = createLogic({
   // phases: validate, transform, and/or process
   async process({ getState, action }, dispatch, done) {
 
-    const result =  await FetchFromServer('auth/login', 'POST', action.payload, true)
-    console.log(result)
-    if (result.data.success) {
-      dispatch(loginSuccess())
-      toast.success(result.data.message, {
+    const result = await FetchFromServer('login', 'POST', action.payload, true)
+    // if (result.data.success) {
+    //   dispatch(loginSuccess())
+    //   toast.success(result.data.message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //   });
+    // } 
+    if (result.status === true) {
+      dispatch(loginSuccess(result.filter))
+      toast.success(result.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
       toast.error(result.data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      console.log("hhhhhhhhhhh")
       dispatch(loginFailure())
     }
     done()
-     // call done when finished dispatching
+    // call done when finished dispatching
   }
 });
 export default LoginLogic

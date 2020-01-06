@@ -1,4 +1,6 @@
 export const AppRoutes = {
   LOGIN: '/signin',
-  SIGNUP: '/signup'
+  SIGNUP: '/signup',
+  DASHBOARD: '/dashboard',
+  FORGOTPASSWORD: '/forgotPassword'
 };

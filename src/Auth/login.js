@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,7 +15,9 @@ import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
 import { loginReq } from '../action/login';
 import { toast } from "react-toastify";
-
+import { useHistory } from "react-router-dom";
+import { AppRoutes } from '../config/AppRoutes'
+import validation from '../Helper/Validation'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,14 +52,44 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignIn = (props) => {
+  let history = useHistory()
   const classes = useStyles();
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('')
   const [inputs, setInputs] = useState({});
   const { loginReducer: { isLoading } } = props;
+  const initialState = {
+    email: "",
+    password: "",
+  };
+  const [
+    { email, password },
+    setState
+  ] = useState(initialState);
+
+
   const handleInputChange = (event) => {
     event.persist();
-    setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
+    //setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
+    // setEmail(event.target.value)
+    // setPassword(event.target.value)
+    const { name, value } = event.target;
+    setState(prevState => ({ ...prevState, [name]: value }));
+
   }
-  console.log(props.loginReducer);
+  useEffect(() => {
+    if (props.loginReducer && props.loginReducer.isLoggedIn) {
+      console.log(props.loginReducer.data,'data')
+      history.push(AppRoutes.DASHBOARD)
+      clearState()
+    }
+  }, [props.loginReducer.isLoggedIn])
+  const clearState = () => {
+    setState({ ...initialState });
+    // setInputs({});
+    // setEmail('')
+    // setPassword('')
+  }
   const handleSubmit = (event) => {
     if (event) {
       // const data = {
@@ -70,7 +102,7 @@ const SignIn = (props) => {
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
     // }
-    
+
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -91,10 +123,15 @@ const SignIn = (props) => {
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            // autoComplete="email"
             autoFocus
-            value={inputs.email}
+            value={email}
             onChange={handleInputChange}
+            validation={['required', 'email']}
+            validationmsg={[
+              'This field is required',
+              'Email address is not valid',
+            ]}
           />
           <TextField
             variant="outlined"
@@ -105,9 +142,17 @@ const SignIn = (props) => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
-            value={inputs.password}
+            // autoComplete="current-password"
+            value={password}
             onChange={handleInputChange}
+            validation={['required', 'min[6]', 'password', 'max[50]']}
+            validationmsg={[
+              'This field is required.',
+              'Password contain at least 6 characters',
+              "Your password can't start or end with a blank space",
+              'Password should not be more than 50 characters',
+            ]}
+
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -125,12 +170,12 @@ const SignIn = (props) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href={AppRoutes.FORGOTPASSWORD} variant="body2">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href={AppRoutes.SIGNUP} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
