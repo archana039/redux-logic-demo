@@ -5,6 +5,7 @@ import SignIn from '../Auth/login';
 import SignUp from '../Auth/Signup'
 import Dashboard from '../Auth/dashboard'
 import ForgotPassword from '../Auth/forgotpassword'
+import Shop from '../Auth/shop'
 const DefaultLayout = ({ component: Component, layout: Layout, ...rest }) => {
   return (
 
@@ -25,6 +26,7 @@ export const RenderRoutes = () => {
       <Route exact path={AppRoutes.SIGNUP} component={SignUp} />
       <Route exact path={AppRoutes.DASHBOARD} component={Dashboard} />
       <Route exact path={AppRoutes.FORGOTPASSWORD} component={ForgotPassword} />
+      <Route exact path={AppRoutes.BLOG} component={Shop} />
     </Switch>
   )
 }
