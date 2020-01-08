@@ -13,13 +13,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
-import { loginReq } from '../action/login';
-import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
-import { AppRoutes } from '../config/AppRoutes'
 import validation from '../Helper/Validation'
 import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import { addBlogReq, editBlogReq, submitEditBlogReq } from '../action/blogType'
+// import Select from '@material-ui/core/Select';
 
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { blogTypeReq } from '../action/blogType';
@@ -59,19 +57,19 @@ const useStyles = makeStyles(theme => ({
 const Shop = (props) => {
   let history = useHistory()
   const classes = useStyles();
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('')
-  const [inputs, setInputs] = useState({});
-  // const { loginReducer: { isLoading } } = props;
+  const [blogType, setBlogType] = useState('');
+  const [photo, setImage] = useState('')
+  const { blogTypeReducer: { isLoading } } = props;
   const initialState = {
     url: "",
     date: new Date(),
-    type: [],
+    type: '',
     blog_title: '',
-    cover_photo: ''
+    cover_photo: '',
+    blog_id:''
   };
   const [
-    { url, date, blog_title, cover_photo, type },
+    { url, date, blog_title, cover_photo, type, blog_id },
     setState
   ] = useState(initialState);
 
@@ -86,14 +84,26 @@ const Shop = (props) => {
 
   }
   useEffect(() => {
-    console.log(props.blogType, 'props.blogType')
-    return props.blogType
-  }, [])
+    // props.blogType();
+    props.editBlogReq(645)
+    if (props.blogTypeReducer.isSuccess) {
+      setBlogType(props.blogTypeReducer.data)
+    }
+    if (props.blogTypeReducer.isEditSuccess) {
+      setBlogType(props.blogTypeReducer.data.blog_type)
+      setState({
+        blog_title: props.blogTypeReducer.data.Detail.blog_title,
+        url: props.blogTypeReducer.data.Detail.url,
+        cover_photo: props.blogTypeReducer.data.Detail.cover_photo,
+        type: props.blogTypeReducer.data.Detail.blog_article_type_id,
+        blog_id: props.blogTypeReducer.data.Detail.blog_id
+      })
+      // setState(props.blogTypeReducer.data.detail)
+    }
+  }, [props.blogTypeReducer.isEditSuccess])
   const clearState = () => {
     setState({ ...initialState });
-    // setInputs({});
-    // setEmail('')
-    // setPassword('')
+
   }
   const handleSubmit = (event) => {
     if (event) {
@@ -101,16 +111,37 @@ const Shop = (props) => {
       //   ...inputs
       // }
       var data = new FormData(event.target)
+      // data.append("cover_photo", cover_photo)
+      data.append("blog_id", blog_id)
       event.preventDefault();
-      props.onLogin(data)
+      //props.addBlogReq(data)
+      props.submitEditBlogReq(data)
     }
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
     // }
 
   }
+  const readURL = (input) => {
+
+    input = input.target;
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        console.log(e.target.result)
+        setImage(e.target.result)
+        setState(prevState => ({ ...prevState, cover_photo: e.target.result }));
+      }.bind(this);
+      setImage(input.files[0].name)
+      // this.setState({
+      //  imageTitle: input.files[0].name,
+      // });
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
   return (
     <Container component="main" maxWidth="xs">
+      {console.log(photo)}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -157,32 +188,33 @@ const Shop = (props) => {
               "Your password can't start or end with a blank space",
               'Password should not be more than 50 characters',
             ]}
-
           />
           <InputLabel id="demo-simple-select-label">Article Type</InputLabel>
           <NativeSelect
             id="demo-customized-select-native"
             value={type}
             onChange={handleInputChange}
+            name="type"
           // input={<BootstrapInput />}
           >
             <option value="" />
-            <option value={10}>Ten</option>
-            <option value={20}>Twenty</option>
-            <option value={30}>Thirty</option>
+            {blogType && blogType.length ?
+              blogType.map((value, index) => (
+                <option value={value.blog_article_id} key={index}>{value.type}</option>
+              ))
+              : ""}
           </NativeSelect>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="cover_photo"
+            name="cover_photo_main"
             label="Shop Cover Photo"
             type="file"
-            id="ShopPhoto"
+            id="cover_photo"
             // autoComplete="current-password"
-            value={cover_photo}
-            onChange={handleInputChange}
+            onChange={readURL}
             validation={['required', 'min[6]', 'password', 'max[50]']}
             validationmsg={[
               'This field is required.',
@@ -203,7 +235,7 @@ const Shop = (props) => {
             color="primary"
             className={classes.submit}
           >
-            {/* {isLoading ? "loaading..." : ""} */}
+            {isLoading ? "loaading..." : ""}
             Save
           </Button>
         </form>
@@ -218,10 +250,17 @@ const Shop = (props) => {
 
 }
 const mapDispatchToProps = (dispatch) => {
-  return { blogType: () => dispatch(blogTypeReq) }
+  return {
+    blogType: () => dispatch(blogTypeReq()),
+    addBlogReq: (data) => dispatch(addBlogReq(data)),
+    editBlogReq: (data) => dispatch(editBlogReq(data)),
+    submitEditBlogReq: (data) => dispatch(submitEditBlogReq(data)),
+
+  }
 }
 const mapStateToProps = (state) => ({
-  // loginReducer: state.LoginReducer
+  blogTypeReducer: state.BlogTypeReducer,
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Shop);

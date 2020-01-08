@@ -54,8 +54,6 @@ const useStyles = makeStyles(theme => ({
 const SignIn = (props) => {
   let history = useHistory()
   const classes = useStyles();
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('')
   const [inputs, setInputs] = useState({});
   const { loginReducer: { isLoading } } = props;
   const initialState = {
@@ -79,7 +77,7 @@ const SignIn = (props) => {
   }
   useEffect(() => {
     if (props.loginReducer && props.loginReducer.isLoggedIn) {
-      console.log(props.loginReducer.data,'data')
+      console.log(localStorage.getItem('token'))
       history.push(AppRoutes.DASHBOARD)
       clearState()
     }

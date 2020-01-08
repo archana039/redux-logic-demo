@@ -1,10 +1,10 @@
 import { createLogic } from 'redux-logic';
-import { blogTypeReq, blogTypeSuccess, blogTypeFailure } from '../action/login';
+import { blogTypeReq, blogTypeSuccess, blogTypeFailure, blogTypeActionType, editBlogSuccess, editBlogFailure, submitEditBlogSuccess } from '../action/blogType';
 import FetchFromServer from '../config/ApiHealper'
 import { toast } from "react-toastify";
 
 const blogTypeLogic = createLogic({
-  type: blogTypeReq,
+  type: blogTypeActionType.BLOGTYPE_REQUEST,
   // your code here, hook into one or more of these execution
   // phases: validate, transform, and/or process
   async process({ getState, action }, dispatch, done) {
@@ -16,7 +16,38 @@ const blogTypeLogic = createLogic({
     //     position: toast.POSITION.TOP_RIGHT,
     //   });
     // } 
-    if (result.status === true) {
+
+    if (result) {
+      dispatch(blogTypeSuccess(result.blog_type))
+      // toast.success(result.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+    } else {
+      // toast.error(result.data.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+      dispatch(blogTypeFailure())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+let token = localStorage.getItem("token")
+const addBlogLogic = createLogic({
+  type: blogTypeActionType.ADDBLOG_REQUEST,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+
+    const result = await FetchFromServer('add_blog', 'POST', action.payload, token)
+    // if (result.data.success) {
+    //   dispatch(loginSuccess())
+    //   toast.success(result.data.message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //   });
+    // } 
+
+    if (result) {
       dispatch(blogTypeSuccess())
       // toast.success(result.message, {
       //   position: toast.POSITION.TOP_RIGHT,
@@ -31,4 +62,68 @@ const blogTypeLogic = createLogic({
     // call done when finished dispatching
   }
 });
-export default blogTypeLogic
+const EditBlogLogic = createLogic({
+  type: blogTypeActionType.EDITBLOG_REQUEST,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+
+    const result = await FetchFromServer(`blogs_detail/${action.payload}`, 'GET', '', token)
+    // if (result.data.success) {
+    //   dispatch(loginSuccess())
+    //   toast.success(result.data.message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //   });
+    // } 
+
+    if (result) {
+      dispatch(editBlogSuccess(result))
+      // toast.success(result.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+    } else {
+      // toast.error(result.data.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+      dispatch(editBlogFailure())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+
+const SubmitEditBlogLogic = createLogic({
+  type: blogTypeActionType.SUBMITEDITBLOG_REQUEST,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+
+    const result = await FetchFromServer(`add_blog`, 'POST', action.payload, token)
+    // if (result.data.success) {
+    //   dispatch(loginSuccess())
+    //   toast.success(result.data.message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //   });
+    // } 
+
+    if (result) {
+      dispatch(submitEditBlogSuccess(result))
+      // toast.success(result.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+    } else {
+      // toast.error(result.data.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+      dispatch(editBlogFailure())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+export const AllBlogLogic = [
+  addBlogLogic,
+  blogTypeLogic,
+  EditBlogLogic,
+  SubmitEditBlogLogic
+]

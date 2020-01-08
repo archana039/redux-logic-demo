@@ -3,7 +3,7 @@ import { signUpReq, signUpSuccess, signUpFailure } from '../action/signup'
 import FetchFromServer from '../config/ApiHealper'
 import { toast } from "react-toastify";
 
-const SignUpLogic = createLogic({
+export const SignUpLogic = createLogic({
   type: signUpReq,
   async process({ getState, action }, dispatch, done) {
     const result = await FetchFromServer('signup', 'POST', action.payload, true)
@@ -21,4 +21,3 @@ const SignUpLogic = createLogic({
     }
   }
 })
-export default SignUpLogic

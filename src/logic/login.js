@@ -3,7 +3,7 @@ import { loginReq, loginFailure, loginSuccess } from '../action/login';
 import FetchFromServer from '../config/ApiHealper'
 import { toast } from "react-toastify";
 
-const LoginLogic = createLogic({
+export const LoginLogic = createLogic({
   type: loginReq,
   // your code here, hook into one or more of these execution
   // phases: validate, transform, and/or process
@@ -17,7 +17,8 @@ const LoginLogic = createLogic({
     //   });
     // } 
     if (result.status === true) {
-      dispatch(loginSuccess(result.filter))
+      dispatch(loginSuccess(result))
+      localStorage.setItem("token", result.token)
       toast.success(result.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -31,4 +32,3 @@ const LoginLogic = createLogic({
     // call done when finished dispatching
   }
 });
-export default LoginLogic

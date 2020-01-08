@@ -3,7 +3,7 @@ import { forgotPasswordReq, forgotPasswordSuccess, forgotPasswordFailure } from 
 import FetchFromServer from '../config/ApiHealper'
 import { toast } from "react-toastify";
 
-const ForgotPasswordLogic = createLogic({
+export const ForgotPasswordLogic = createLogic({
   type: forgotPasswordReq,
   async process({ getState, action }, dispatch, done) {
     const result = await FetchFromServer('forget_password', 'POST', action.payload, true)
@@ -21,4 +21,3 @@ const ForgotPasswordLogic = createLogic({
     }
   }
 })
-export default ForgotPasswordLogic

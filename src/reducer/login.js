@@ -1,7 +1,7 @@
 import { LoginActionType } from "../action/login";
 import { handleActions } from 'redux-actions';
 
-const initialStates = { isLoading: false, isLoggedIn: false, data: {} }
+const initialStates = { isLoading: false, isLoggedIn: false, data: {}, }
 const LoginReducer = handleActions(
   {
     [LoginActionType.LOGIN_REQUEST]: (state = initialStates, action) => ({
@@ -12,7 +12,8 @@ const LoginReducer = handleActions(
       ...state,
       isLoading: false,
       isLoggedIn: true,
-      data: action.payload
+      data: action.payload,
+
     }),
     [LoginActionType.LOGIN_FAILURE]: (state = initialStates, action) => ({
       ...state,
