@@ -11,7 +11,13 @@ export const blogTypeActionType = {
   EDITBLOG_FAILURE: "Failure of edit blog",
   SUBMITEDITBLOG_REQUEST: 'Request of submit edit blog',
   SUBMITEDITBLOG_SUCCESS: "Success of submit edit blog",
-  SUBMITEDITBLOG_FAILURE: 'Failure of submit edit blog'
+  SUBMITEDITBLOG_FAILURE: 'Failure of submit edit blog',
+  LISTBLOG_REQUEST: "Request for blog list",
+  LISTBLOG_SUCCESS: "Success of blog list",
+  LISTBLOG_FAILURE: "Failure of blog list",
+  DELETEBLOG_REQUEST: "Request for delete blog",
+  DELETEBLOG_SUCCESS: 'Success of delete blog',
+  DELETEBLOG_FAILURE: "Failure of delete blog"
 }
 export const blogTypeReq = createAction(blogTypeActionType.BLOGTYPE_REQUEST)
 
@@ -36,3 +42,19 @@ export const submitEditBlogReq = createAction(blogTypeActionType.SUBMITEDITBLOG_
 export const submitEditBlogSuccess = createAction(blogTypeActionType.SUBMITEDITBLOG_SUCCESS)
 
 export const submitEditBlogFailure = createAction(blogTypeActionType.SUBMITEDITBLOG_FAILURE)
+
+export const listBlogReq = createAction(blogTypeActionType.LISTBLOG_REQUEST)
+
+export const listBlogSuccess = createAction(blogTypeActionType.LISTBLOG_SUCCESS)
+
+export const listBlogFailure = createAction(blogTypeActionType.LISTBLOG_FAILURE)
+
+export const deleteBlogReq = createAction(blogTypeActionType.DELETEBLOG_REQUEST)
+
+export const deleteBlogSuccess = createAction(blogTypeActionType.DELETEBLOG_SUCCESS)
+
+export const deleteBlogFailure = createAction(blogTypeActionType.DELETEBLOG_FAILURE)
+
+
+
+

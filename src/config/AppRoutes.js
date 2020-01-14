@@ -3,5 +3,7 @@ export const AppRoutes = {
   SIGNUP: '/signup',
   DASHBOARD: '/dashboard',
   FORGOTPASSWORD: '/forgotPassword',
-  BLOG:'/blog'
+  BLOG: '/blog',
+  EDITBLOG: '/editblog/:id',
+  BLOGLIST: '/list'
 };

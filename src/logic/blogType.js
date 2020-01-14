@@ -1,5 +1,5 @@
 import { createLogic } from 'redux-logic';
-import { blogTypeReq, blogTypeSuccess, blogTypeFailure, blogTypeActionType, editBlogSuccess, editBlogFailure, submitEditBlogSuccess } from '../action/blogType';
+import { blogTypeReq, blogTypeSuccess, blogTypeFailure, blogTypeActionType, editBlogSuccess, editBlogFailure, submitEditBlogSuccess, listBlogSuccess, listBlogFailure, deleteBlogSuccess, deleteBlogFailure } from '../action/blogType';
 import FetchFromServer from '../config/ApiHealper'
 import { toast } from "react-toastify";
 
@@ -108,14 +108,68 @@ const SubmitEditBlogLogic = createLogic({
 
     if (result) {
       dispatch(submitEditBlogSuccess(result))
-      // toast.success(result.message, {
-      //   position: toast.POSITION.TOP_RIGHT,
-      // });
+      toast.success(result.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.error(result.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      dispatch(editBlogFailure())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+
+const ListBlogLogic = createLogic({
+  type: blogTypeActionType.LISTBLOG_REQUEST,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+
+    const result = await FetchFromServer(`my_blogs?offest=${0}&limit=${5}`, 'GET', '', token)
+    // if (result.data.success) {
+    //   dispatch(loginSuccess())
+    //   toast.success(result.data.message, {
+    //     position: toast.POSITION.TOP_RIGHT,
+    //   });
+    // } 
+
+    if (result) {
+      dispatch(listBlogSuccess(result))
+      toast.success(result.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
     } else {
       // toast.error(result.data.message, {
       //   position: toast.POSITION.TOP_RIGHT,
       // });
-      dispatch(editBlogFailure())
+      dispatch(listBlogFailure())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+
+const DeleteBlogLogic = createLogic({
+  type: blogTypeActionType.DELETEBLOG_REQUEST,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+
+    const result = await FetchFromServer(`/delete_blog/${action.payload}`, 'GET', '', token)
+
+    if (result) {
+      dispatch(deleteBlogSuccess(result))
+      toast.success(result.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      // toast.error(result.data.message, {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
+      dispatch(deleteBlogFailure())
     }
     done()
     // call done when finished dispatching
@@ -125,5 +179,7 @@ export const AllBlogLogic = [
   addBlogLogic,
   blogTypeLogic,
   EditBlogLogic,
-  SubmitEditBlogLogic
+  SubmitEditBlogLogic,
+  ListBlogLogic,
+  DeleteBlogLogic
 ]

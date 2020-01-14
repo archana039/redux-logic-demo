@@ -21,6 +21,7 @@ import { addBlogReq, editBlogReq, submitEditBlogReq } from '../action/blogType'
 
 import NativeSelect from '@material-ui/core/NativeSelect';
 import { blogTypeReq } from '../action/blogType';
+import { AppRoutes } from '../config/AppRoutes';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -66,7 +67,7 @@ const Shop = (props) => {
     type: '',
     blog_title: '',
     cover_photo: '',
-    blog_id:''
+    blog_id: ''
   };
   const [
     { url, date, blog_title, cover_photo, type, blog_id },
@@ -84,8 +85,12 @@ const Shop = (props) => {
 
   }
   useEffect(() => {
-    // props.blogType();
-    props.editBlogReq(645)
+    if (props.match.params && props.match.params.id) {
+      props.editBlogReq(props.match.params.id)
+    }
+    else {
+      props.blogType();
+    }
     if (props.blogTypeReducer.isSuccess) {
       setBlogType(props.blogTypeReducer.data)
     }
@@ -100,7 +105,11 @@ const Shop = (props) => {
       })
       // setState(props.blogTypeReducer.data.detail)
     }
-  }, [props.blogTypeReducer.isEditSuccess])
+    console.log(props.blogTypeReducer.isEditable, 'props.blogTypeReducer.isEditable')
+    if (props.blogTypeReducer.isEditable) {
+      history.push(AppRoutes.BLOGLIST)
+    }
+  }, [props.blogTypeReducer.isEditSuccess, props.blogTypeReducer.isEditable])
   const clearState = () => {
     setState({ ...initialState });
 
@@ -148,7 +157,7 @@ const Shop = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Add Shop
+          {props.match.params && props.match.params.id ? "Edit Shop" : "Add Shop"}
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField

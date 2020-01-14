@@ -6,6 +6,7 @@ import SignUp from '../Auth/Signup'
 import Dashboard from '../Auth/dashboard'
 import ForgotPassword from '../Auth/forgotpassword'
 import Shop from '../Auth/shop'
+import BlogList from '../list/blogList'
 const DefaultLayout = ({ component: Component, layout: Layout, ...rest }) => {
   return (
 
@@ -27,6 +28,9 @@ export const RenderRoutes = () => {
       <Route exact path={AppRoutes.DASHBOARD} component={Dashboard} />
       <Route exact path={AppRoutes.FORGOTPASSWORD} component={ForgotPassword} />
       <Route exact path={AppRoutes.BLOG} component={Shop} />
+      <Route exact path={AppRoutes.BLOGLIST} component={BlogList} />
+      <Route exact path={AppRoutes.EDITBLOG} component={Shop} />
     </Switch>
   )
 }
+

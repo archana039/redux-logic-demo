@@ -8,7 +8,12 @@ const Dashboard = () => {
     <Typography component="h1" variant="h5">
       <Link href={AppRoutes.BLOG} variant="body2">
         <Button variant="contained" color="primary">
-          Add Profile
+          Add Blog
+        </Button>
+      </Link>
+      <Link href={AppRoutes.BLOGLIST} variant="body2">
+        <Button variant="contained" color="primary">
+          Blog List
         </Button>
       </Link>
     </Typography>
