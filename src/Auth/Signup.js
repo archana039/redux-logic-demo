@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -57,13 +57,23 @@ const SignUP = (props) => {
     event.persist();
     setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
   }
+  // const { signUpStatus: { isLoading } } = props;
+  useEffect(() => {
+    if (!props.signUpStatus.isLoading)
+      console.log("condition")
+    clearState()
+  }, [props.signUpStatus.isLoading])
+  const clearState = () => {
+    // console.log("hello")
+    // setInputs({});
 
+  }
   const handleSubmit = (event) => {
     if (event) {
-      // const data = {
-      //   ...inputs
-      // }
-      var data = new FormData(event.target)
+      const data = {
+        ...inputs
+      }
+      // var data = new FormData(event.target)
       event.preventDefault();
       props.onSignUP(data)
     }
@@ -88,12 +98,25 @@ const SignUP = (props) => {
             margin="normal"
             required
             fullWidth
-            id="name"
-            label="Name"
-            name="first_name"
+            id="firstName"
+            label="First Name"
+            name="firstName"
             autoComplete="off"
             autoFocus
-            value={inputs.first_name}
+            value={inputs.firstName}
+            onChange={handleInputChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="lastName"
+            label="Last Name"
+            name="lastName"
+            autoComplete="off"
+            autoFocus
+            value={inputs.lastName}
             onChange={handleInputChange}
           />
           <TextField
@@ -127,12 +150,12 @@ const SignUP = (props) => {
             margin="normal"
             required
             fullWidth
-            name="confirm_password"
+            name="confirmPassword"
             label="Confirm Password"
             type="password"
-            id="ConfirmPassword"
+            id="confirmPassword"
             autoComplete="current-password"
-            value={inputs.confirm_password}
+            value={inputs.confirmPassword}
             onChange={handleInputChange}
           />
           <FormControlLabel
@@ -175,7 +198,7 @@ const mapDispatchToProps = (dispatch) => {
   return { onSignUP: (data) => dispatch(signUpReq(data)) }
 }
 const mapStateToProps = (state) => {
-  const signUpStatus = state.signUpReducer
+  const signUpStatus = state.SignUpReducer
   return { signUpStatus }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SignUP);

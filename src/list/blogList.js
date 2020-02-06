@@ -82,7 +82,6 @@ const BlogList = (props) => {
     setPage(newPage);
   };
   const handleEdit = (id) => {
-    console.log(AppRoutes.EDITBLOG.replace(":id", id))
     history.push(AppRoutes.EDITBLOG.replace(":id", id))
   }
   const handleChangeRowsPerPage = event => {
@@ -93,6 +92,13 @@ const BlogList = (props) => {
     props.onBlogDelete(id)
   }
   useEffect(() => {
+    let token = localStorage.getItem('token')
+    console.log(token, 'token')
+    if (token === null) {
+      history.push(AppRoutes.LOGIN)
+    }
+  }, [])
+  useEffect(() => {
     props.onBlogList()
     if (props.blogListReducer && props.blogListReducer.isListSuccess) {
       setBlogList(props.blogListReducer.data.blog)
@@ -101,10 +107,10 @@ const BlogList = (props) => {
       props.onBlogList()
     }
   }, [props.blogListReducer.isListSuccess, props.blogDeleteReducer.isDeleted])
-
+  console.log(localStorage.getItem('token'))
   return (
     <Paper className={classes.root}>
-      {console.log(blogList)}
+
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

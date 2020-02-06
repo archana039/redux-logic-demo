@@ -76,10 +76,23 @@ const SignIn = (props) => {
 
   }
   useEffect(() => {
+    console.log(props.loginReducer.isLoggedIn)
     if (props.loginReducer && props.loginReducer.isLoggedIn) {
-      console.log(localStorage.getItem('token'))
       history.push(AppRoutes.DASHBOARD)
       clearState()
+    }
+    else {
+      history.push(AppRoutes.LOGIN)
+    }
+  }, [])
+  useEffect(() => {
+    if (props.loginReducer && props.loginReducer.isLoggedIn) {
+      console.log(props.loginReducer.isLoggedIn)
+      history.push(AppRoutes.DASHBOARD)
+      clearState()
+    }
+    else {
+      history.push(AppRoutes.LOGIN)
     }
   }, [props.loginReducer.isLoggedIn])
   const clearState = () => {
@@ -90,10 +103,12 @@ const SignIn = (props) => {
   }
   const handleSubmit = (event) => {
     if (event) {
-      // const data = {
-      //   ...inputs
-      // }
-      var data = new FormData(event.target)
+      const data = {
+        email,
+        password
+      }
+      console.log(data)
+      // var data = new FormData(event.target)
       event.preventDefault();
       props.onLogin(data)
     }

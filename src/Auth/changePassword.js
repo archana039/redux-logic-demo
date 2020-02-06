@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { AppRoutes } from '../config/AppRoutes'
-import { forgotPasswordReq } from '../action/forgotpassword';
+import { changePasswordReq } from '../action/changepassword';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -49,36 +49,54 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ForgotPassword = (props) => {
+const ChangePassword = (props) => {
   let history = useHistory()
   const classes = useStyles();
   // const [email, setEmail] = useState('');
   // const [password, setPassword] = useState('')
   const [inputs, setInputs] = useState({});
-  const { forgotPasswordReducer: { isLoading } } = props;
+  // const { changePasswordReducer: { isLoading } } = props;
+  const initialState = {
+    email: "",
+  };
+  const [
+    { email },
+    setState
+  ] = useState(initialState);
 
 
   const handleInputChange = (event) => {
     event.persist();
     setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
+    // setEmail(event.target.value)
+    // setPassword(event.target.value)
+    const { name, value } = event.target;
+    setState(prevState => ({ ...prevState, [name]: value }));
   }
   useEffect(() => {
-    if (props.forgotPasswordReducer && props.forgotPasswordReducer.forgotPassword) {
-      console.log("effect")
-      // history.push(AppRoutes.DASHBOARD)
+    let token = localStorage.getItem('token')
+    console.log(token)
+    if (token === null) {
+      props.history.push(AppRoutes.LOGIN)
+    }
+  }, [])
+  useEffect(() => {
+    if (!props.changePasswordReducer.isLoading) {
       clearState()
     }
-  }, [props.forgotPasswordReducer.forgotPassword])
+  }, [props.changePasswordReducer.isLoading])
   const clearState = () => {
     setInputs({});
+
   }
   const handleSubmit = (event) => {
     if (event) {
       const data = {
-        ...inputs
+        ...inputs,
       }
+      // var data = new FormData(event.target)
       event.preventDefault();
-      props.onForgotPassword(data)
+      props.onChangePassword(data)
     }
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
@@ -93,7 +111,7 @@ const ForgotPassword = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Forgot Password
+          Change Password
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
@@ -101,12 +119,38 @@ const ForgotPassword = (props) => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            // autoComplete="email"
-            autoFocus
-            value={inputs.email}
+            name="oldPassword"
+            label="Old Password"
+            type="password"
+            id="OldPassword"
+            // autoComplete="current-password"
+            value={inputs.oldPassword}
+            onChange={handleInputChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="newPassword"
+            label="New Password"
+            type="password"
+            id="Newpassword"
+            // autoComplete="current-password"
+            value={inputs.newPassword}
+            onChange={handleInputChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="Confirmpassword"
+            // autoComplete="current-password"
+            value={inputs.confirmPassword}
             onChange={handleInputChange}
           />
           <FormControlLabel
@@ -120,7 +164,7 @@ const ForgotPassword = (props) => {
             color="primary"
             className={classes.submit}
           >
-            {isLoading ? "loaading..." : ""}
+            {/* {isLoading ? "loaading..." : ""} */}
             Submit
           </Button>
           <Grid container>
@@ -130,7 +174,7 @@ const ForgotPassword = (props) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link href={AppRoutes.SIGNUP} variant="body2">
+              <Link href={AppRoutes.FORGOTPASSWORD} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -147,10 +191,10 @@ const ForgotPassword = (props) => {
 
 }
 const mapDispatchToProps = (dispatch) => {
-  return { onForgotPassword: (data) => dispatch(forgotPasswordReq(data)) }
+  return { onChangePassword: (data) => dispatch(changePasswordReq(data)) }
 }
 const mapStateToProps = (state) => ({
-  forgotPasswordReducer: state.ForgotPasswordReducer
+  changePasswordReducer: state.ChangePasswordReducer
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

@@ -1,10 +1,18 @@
 import { LoginLogic } from './login'
 import { SignUpLogic } from './signup'
+import { ChangePasswordLogic } from './changepassword'
 import { ForgotPasswordLogic } from './forgotPassword'
-import { AllBlogLogic } from './blogType'
+import { ResetPasswordLogic } from './resetpassword'
+// import { AllBlogLogic } from './blogType'
+// import { SearchLogic } from './search'
+import { LinkVerificationLogic } from './linkverification'
 export const AllLogics = [
   LoginLogic,
   SignUpLogic,
   ForgotPasswordLogic,
-  ...AllBlogLogic
+  // SearchLogic,
+  // ...AllBlogLogic
+  ChangePasswordLogic,
+  ResetPasswordLogic,
+  LinkVerificationLogic
 ]

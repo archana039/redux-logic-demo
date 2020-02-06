@@ -5,5 +5,9 @@ export const AppRoutes = {
   FORGOTPASSWORD: '/forgotPassword',
   BLOG: '/blog',
   EDITBLOG: '/editblog/:id',
-  BLOGLIST: '/list'
+  BLOGLIST: '/list',
+  SEARCH: '/search',
+  CHANGEPASSWORD: '/changepassword',
+  RESETPASSWORD: '/resetpassword'
+
 };

@@ -85,6 +85,13 @@ const Shop = (props) => {
 
   }
   useEffect(() => {
+    let token = localStorage.getItem('token')
+    console.log(token, 'token')
+    if (token === null) {
+      history.push(AppRoutes.LOGIN)
+    }
+  }, [])
+  useEffect(() => {
     if (props.match.params && props.match.params.id) {
       props.editBlogReq(props.match.params.id)
     }
@@ -150,7 +157,6 @@ const Shop = (props) => {
   }
   return (
     <Container component="main" maxWidth="xs">
-      {console.log(photo)}
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -207,8 +213,8 @@ const Shop = (props) => {
           // input={<BootstrapInput />}
           >
             <option value="" />
-            {blogType && blogType.length ?
-              blogType.map((value, index) => (
+            {props.blogTypeReducer.data && props.blogTypeReducer.data.length ?
+              props.blogTypeReducer.data.map((value, index) => (
                 <option value={value.blog_article_id} key={index}>{value.type}</option>
               ))
               : ""}
