@@ -68,6 +68,7 @@ const SignIn = (props) => {
 
   const handleInputChange = (event) => {
     event.persist();
+    validation(event, 0, 0);
     //setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
     // setEmail(event.target.value)
     // setPassword(event.target.value)
@@ -145,6 +146,7 @@ const SignIn = (props) => {
               'This field is required',
               'Email address is not valid',
             ]}
+            className='form-control chapterInput'
           />
           <TextField
             variant="outlined"

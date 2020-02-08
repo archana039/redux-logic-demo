@@ -4,6 +4,7 @@
 // Button disable: 0 - for not disable and 1 - for disable
 // errror : runtime error show
 function validation(event, type, buttonDisable, error) {
+	console.log(event, type)
 	if (type === 1) {
 
 		let buttonName = '';
@@ -114,12 +115,15 @@ function runTimeValidation(event, messageError) {
 	event.parentElement.appendChild(newElement);
 }
 function validationCheck(event) {
+	console.log("hellokkkkkkkkkkk")
 	let getdData;
 	if (event.type === 'checkbox') {
 		getdData = event.checked;
 	} else {
 		getdData = event.value;
 	}
+	console.log(event)
+	console.log(document.getElementsByTagName("TextField"))
 	if (
 		event.getAttribute('validation') === ' ' ||
 		event.getAttribute('validation') === undefined ||
@@ -128,6 +132,7 @@ function validationCheck(event) {
 	)
 		return false;
 	let validation = event.getAttribute('validation').split(',');
+
 	let accept = event.getAttribute('accept');
 	if (accept === 'image') event.parentElement.className += ' error ';
 	else event.parentElement.className += ' error ';
@@ -153,6 +158,7 @@ function validationCheck(event) {
 }
 
 function eroorvali(mode, getdData, message, event) {
+	console.log("errorvali")
 	let modedata = mode.split('[');
 	let textLeng = 0;
 	if (modedata.length === 1) {
@@ -164,6 +170,7 @@ function eroorvali(mode, getdData, message, event) {
 	switch (mode) {
 		case 'required':
 			if (getdData === '') {
+
 				event.parentElement.appendChild(message);
 				return true;
 			}
@@ -248,6 +255,7 @@ function eroorvali(mode, getdData, message, event) {
 			break;
 		case 'email':
 			var emailRegex = getdData.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+			console.log("hellocondition")
 			if (getdData !== '' && !emailRegex) {
 				event.parentElement.appendChild(message);
 				return true;

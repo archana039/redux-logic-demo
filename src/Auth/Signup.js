@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
 import { signUpReq } from '../action/signup';
 import { AppRoutes } from '../config/AppRoutes';
-
+import { useHistory } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignUP = (props) => {
-
+  let history = useHistory()
   const classes = useStyles();
   const [inputs, setInputs] = useState({});
   const handleInputChange = (event) => {
@@ -59,13 +59,15 @@ const SignUP = (props) => {
   }
   // const { signUpStatus: { isLoading } } = props;
   useEffect(() => {
-    if (!props.signUpStatus.isLoading)
+
+    if (props.signUpStatus.isSignup)
       console.log("condition")
+    history.push(AppRoutes.SIGNUP)
     clearState()
-  }, [props.signUpStatus.isLoading])
+  }, [props.signUpStatus.isSignup])
   const clearState = () => {
     // console.log("hello")
-    // setInputs({});
+    setInputs({});
 
   }
   const handleSubmit = (event) => {
@@ -77,11 +79,12 @@ const SignUP = (props) => {
       event.preventDefault();
       props.onSignUP(data)
     }
-    console.log(props.loginStatus)
+    console.log(props.signUpStatus)
     // if (props.loginStatus.isLoggedIn) {
     //   console.log("Hello")
     // }
   }
+  console.log(inputs)
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -197,8 +200,7 @@ const SignUP = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return { onSignUP: (data) => dispatch(signUpReq(data)) }
 }
-const mapStateToProps = (state) => {
-  const signUpStatus = state.SignUpReducer
-  return { signUpStatus }
-}
+const mapStateToProps = (state) => ({
+  signUpStatus: state.SignUpReducer
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SignUP);

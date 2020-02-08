@@ -1,6 +1,6 @@
 import { SignupActionType } from "../action/signup";
 import { handleActions } from 'redux-actions';
-const initialStates = { isLoading: false, isLoggedIn: false }
+const initialStates = { isLoading: false, isSignup: false }
 
 const SignUpReducer = handleActions(
   {
@@ -11,7 +11,7 @@ const SignUpReducer = handleActions(
     [SignupActionType.SIGNUP_SUCCESS]: (state = initialStates, action) => ({
       ...state,
       isLoading: false,
-      isLoggedIn: true
+      isSignup: true
     }),
     [SignupActionType.SIGNUP_FAILURE]: (state = initialStates, action) => ({
       ...state,
