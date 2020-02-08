@@ -8,6 +8,7 @@ export const AppRoutes = {
   BLOGLIST: '/list',
   SEARCH: '/search',
   CHANGEPASSWORD: '/changepassword',
-  RESETPASSWORD: '/resetpassword'
+  RESETPASSWORD: '/resetpassword',
+  USERSLIST: '/userslist'
 
 };

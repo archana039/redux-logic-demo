@@ -89,7 +89,7 @@ const SignIn = (props) => {
   useEffect(() => {
     if (props.loginReducer && props.loginReducer.isLoggedIn) {
       console.log(props.loginReducer.isLoggedIn)
-      history.push(AppRoutes.DASHBOARD)
+      history.push(AppRoutes.USERSLIST)
       clearState()
     }
     else {

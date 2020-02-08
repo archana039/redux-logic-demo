@@ -1,29 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-
-export default function MaterialTableDemo() {
-  const [state, setState] = React.useState({
+import { usersListReq } from '../action/users'
+import { connect } from "react-redux";
+const UsersList = (props) => {
+  const [usersList, setUserList] = useState([])
+  const [state, setState] = useState({
     columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Surname', field: 'surname' },
-      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-      {
-        title: 'Birth Place',
-        field: 'birthCity',
-        lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-      },
+      { title: 'Name', field: 'firstName' },
+      { title: 'Surname', field: 'lastName' },
+      { title: 'Email', field: 'email', },
+      // {
+      //   title: 'Birth Place',
+      //   field: 'birthCity',
+      //   lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+      // },
     ],
-    data: [
-      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-      {
-        name: 'Zerya Betül',
-        surname: 'Baran',
-        birthYear: 2017,
-        birthCity: 34,
-      },
-    ],
+    data:
+      usersList
+    // { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
+    // {
+    //   name: 'Zerya Betül',
+    //   surname: 'Baran',
+    //   birthYear: 2017,
+    //   birthCity: 34,
+    // },
+    ,
   });
+  useEffect(() => {
+    console.log("hello")
+    props.onGetusersList()
+  }, [])
 
+  useEffect(() => {
+    console.log(props)
+    if (props.usersListReducer && props.usersListReducer.usersList) {
+      console.log(props.usersListReducer.data)
+      setUserList(props.usersListReducer.data.data)
+    }
+  }, [props.usersListReducer.usersList])
+  console.log(state.data, 'usersList')
   return (
     <MaterialTable
       title="Editable Example"
@@ -69,3 +84,11 @@ export default function MaterialTableDemo() {
     />
   );
 }
+const mapDispatchToProps = (dispatch) => {
+  return { onGetusersList: (data) => dispatch(usersListReq(data)) }
+}
+const mapStateToProps = (state) => ({
+  usersListReducer: state.UsersListReducer
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersList);

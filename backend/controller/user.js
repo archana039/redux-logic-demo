@@ -1,6 +1,7 @@
 const User = require('../models/user');
 
 const UserList = async (req, res) => {
+  console.log("jjjjjjjjjjjjjj")
   try {
     let condition = {
       isDelete: false,

@@ -200,7 +200,6 @@ const ForgotPassword = async (req, res) => {
         expireToken: currentDate,
       }
     )
-    console.log(updateToken)
     const emailAdd = new Email(req);
     await emailAdd.setTemplate(AvailiableTemplates.FORGOTPASSWORD, {
       firstName: data.firstName,
@@ -239,7 +238,6 @@ const LinkVerfied = async (req, res) => {
       _id: id,
       verifyToken: query.token
     })
-    console.log(result, 'result')
     if (result === null) {
       return res.status(400).json({
         message: "Your verification link has been expired.",
@@ -254,7 +252,6 @@ const LinkVerfied = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
   }
 }
 

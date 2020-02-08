@@ -7,6 +7,7 @@ import SearchReducer from './search'
 import ChangePasswordReducer from './changepassword'
 import ResetPasswordReducer from './resetpassword'
 import LinkVerificationReducer from './linkverification'
+import UsersListReducer from './users'
 export default combineReducers({
   LoginReducer,
   SignUpReducer,
@@ -15,5 +16,6 @@ export default combineReducers({
   SearchReducer,
   ChangePasswordReducer,
   ResetPasswordReducer,
-  LinkVerificationReducer
+  LinkVerificationReducer,
+  UsersListReducer
 })

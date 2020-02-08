@@ -17,7 +17,5 @@ AuthRouter.post('/resetpassword', ResetPasswordValidator, ResetPassword)
 AuthRouter.get('/linkverification', LinkVerfied)
 
 
-module.exports = {
-  AuthRouter,
-  UserRouter
-};
+module.exports =
+  AuthRouter

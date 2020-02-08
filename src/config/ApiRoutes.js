@@ -41,7 +41,12 @@ const ApiRoutes = {
     method: "GET",
     authenticate: true,
   },
-
+  GETUSERSLIST: {
+    service: "/users",
+    url: "/getusersList",
+    method: "GET",
+    authenticate: true,
+  },
 };
 
 export default ApiRoutes;

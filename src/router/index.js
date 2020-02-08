@@ -10,6 +10,7 @@ import BlogList from '../list/blogList'
 import Search from '../list/search'
 import ChangePassword from '../Auth/changePassword'
 import ResetPassword from '../Auth/resetpassword'
+import UsersList from '../Auth/usersList'
 const DefaultLayout = ({ component: Component, layout: Layout, ...rest }) => {
   return (
 
@@ -36,6 +37,7 @@ export const RenderRoutes = () => {
       <Route exact path={AppRoutes.SEARCH} component={Search} />
       <Route exact path={AppRoutes.CHANGEPASSWORD} component={ChangePassword} />
       <Route exact path={AppRoutes.RESETPASSWORD} component={ResetPassword} />
+      <Route exact path={AppRoutes.USERSLIST} component={UsersList} />
     </Switch>
   )
 }

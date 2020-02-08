@@ -1,7 +1,9 @@
 var express = require('express')
-const { uses: { UserList } } = require('../controller')
+const { users: { UserList } } = require('../controller')
+console.log(UserList, 'UserList')
+
 const UserRouter = express.Router()
-UserRouter.get('/usersList', UserList)
-module.exports = {
+
+UserRouter.get('/getusersList', UserList)
+module.exports =
   UserRouter
-};
