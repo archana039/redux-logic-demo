@@ -10,5 +10,4 @@ export const AppRoutes = {
   CHANGEPASSWORD: '/changepassword',
   RESETPASSWORD: '/resetpassword',
   USERSLIST: '/userslist'
-
 };

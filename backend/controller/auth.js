@@ -9,7 +9,6 @@ const moment = require("moment")
 //user signup
 const SignUp = async (req, res) => {
   const errors = validationResult(req)
-  console.log(errors, 'errors')
   if (!errors.isEmpty()) {
     return res.status(422).json({
       message: ValidationFormatter(errors.mapped()),
@@ -17,7 +16,8 @@ const SignUp = async (req, res) => {
     })
   }
   try {
-    const { body: { firstName, lastName, email, password } } = req
+    const { body: { firstName, lastName, email, password }, file } = req
+    console.log(file, 'file')
     const resp = await User.findOne({ email })
     if (resp && resp.email === email) {
       return res.status(400).json({
@@ -28,11 +28,8 @@ const SignUp = async (req, res) => {
     }
     else {
       const salt = generateSalt();
-      console.log(salt, 'salt')
       const hashPassword = encryptPassword(password, salt);
-      console.log(hashPassword, 'hashPassword')
-      const result = await User.create({ firstName, lastName, email, password: hashPassword, isActive: true, })
-      console.log(result)
+      const result = await User.create({ firstName, lastName, email, password: hashPassword, isActive: true, profileImage: file ? file.filename : "" })
       if (result) {
         return res.status(200).json({
           code: 200,
@@ -44,6 +41,7 @@ const SignUp = async (req, res) => {
 
 
   } catch (error) {
+    console.log(error, 'error')
     return res.status(500).json({
       code: 500,
       message: 'Unexpected error occured',

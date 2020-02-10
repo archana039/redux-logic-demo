@@ -11,12 +11,16 @@ const User = new Schema({
   email: {
     type: String,
   },
+  profileImage: {
+
+  },
   password: {
     type: String,
   },
   confirmPassword: {
     type: String
   },
+
   isActive: {
     type: Boolean
   },

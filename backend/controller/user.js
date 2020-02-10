@@ -5,13 +5,15 @@ const ValidationFormatter = require('../helper/validationFormatter')
 
 const UserList = async (req, res) => {
   try {
+    const { query: { skip, limit } } = req
     let condition = {
       isDelete: false,
     }
     let sortCondition = {
       createdAt: -1
     }
-    const result = await User.find()
+    const result = await User.find(condition).skip(parseInt(skip)).limit(parseInt(limit))
+    console.log(result, 'result')
     if (result) {
       return res.status(200).json({
         messsage: "Users List get successfully",
@@ -29,7 +31,7 @@ const UserList = async (req, res) => {
 
 //Edit userList api
 
-const EditUserList =async(req,res) =>{
+const EditUserList = async (req, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -37,90 +39,90 @@ const EditUserList =async(req,res) =>{
       success: false
     })
   }
-  try{
-    const {body:{firstName, lastName, email,_id}}=req
-    let data={
+  try {
+    const { body: { firstName, lastName, email, _id } } = req
+    let data = {
       firstName,
       lastName,
       email,
-      UpdatedAt:Date.now()
+      UpdatedAt: Date.now()
     }
     console.log(_id)
-    const result =await User.update(
+    const result = await User.update(
       {
-        _id:_id
+        _id: _id
       },
       {
-        $set:data
+        $set: data
       }
     )
-    console.log(result,'result')
-    if(result){
+    console.log(result, 'result')
+    if (result) {
       return res.status(200).json({
-        message:"User detail updated successfully",
-        staus:true,
-        data:result
+        message: "User detail updated successfully",
+        staus: true,
+        data: result
       })
     }
   }
-  catch(error){
+  catch (error) {
     console.log(error)
   }
 }
 
 // Delete user api
 
-const DeleteUser =async(req,res)=>{
-  try{
-   const {body:{_id}}=req
-  const result =await User.update(
-    {
-      _id:_id
-    },
-    {
-      $set:{
-        isDelete:true
+const DeleteUser = async (req, res) => {
+  try {
+    const { body: { _id } } = req
+    const result = await User.update(
+      {
+        _id: _id
+      },
+      {
+        $set: {
+          isDelete: true
+        }
       }
+    )
+    if (result) {
+      return res.status(200).json({
+        message: "User deleted successfully",
+        status: true
+      })
     }
-  )
-  if(result){
-    return res.status(200).json({
-      message:"User deleted successfully",
-      status:true
-    })
-  }
 
   }
-  catch(error){
+  catch (error) {
     console.log(error)
   }
 }
 
 //Users status api 
 
-const UserStatus = async(req, res)=>{
-  try{
-    const {body:{isActive}}=req
-    let id=""
+const UserStatus = async (req, res) => {
+  try {
+    const { body: { isActive, id } } = req
     const result = await User.update(
-      {_id:id},
+      { _id: id },
       {
-        $set:{
+        $set: {
           isActive
         }
       }
     )
-    if(result){
+    if (result) {
       return res.status(200).json({
-        message:"Status Updated successfully",
-        status:true
+        message: "Status Updated successfully",
+        status: true,
+        data: result
       })
     }
   }
-  catch(error){
+  catch (error) {
     return res.status(500).json({
-      message:"Unexpected error occured",
-      status:false
+      message: "Unexpected error occured",
+      status: false
     })
   }
 }

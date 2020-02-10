@@ -14,5 +14,5 @@ data = {
   API_VERSION: "api",
 };
 
-// export const IMAGE_URL = 'http://localhost:8080/image/'
+export const IMAGE_URL = 'http://localhost:8081/image/'
 export const AppConfig = data;

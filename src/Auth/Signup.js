@@ -16,6 +16,10 @@ import { connect } from "react-redux";
 import { signUpReq } from '../action/signup';
 import { AppRoutes } from '../config/AppRoutes';
 import { useHistory } from "react-router-dom";
+import { IMAGE_URL } from "../config/AppConfig";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
+import clsx from 'clsx';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -30,6 +34,20 @@ function Copyright() {
 }
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -47,44 +65,66 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    // top: '50%',
+    left: '50%',
+    marginTop: "25px",
+    marginLeft: -12,
+  },
 }));
 
 const SignUP = (props) => {
   let history = useHistory()
   const classes = useStyles();
   const [inputs, setInputs] = useState({});
+  const [previewImage, setPreviewImage] = useState('')
+  const [userImage, setUserImage] = useState('')
+  // const buttonClassname = clsx({
+  //   [classes.buttonSuccess]: success,
+  // });
   const handleInputChange = (event) => {
     event.persist();
     setInputs(inputs => ({ ...inputs, [event.target.name]: event.target.value }));
   }
-  // const { signUpStatus: { isLoading } } = props;
+  const { signUpStatus: { isLoading } } = props;
   useEffect(() => {
 
     if (props.signUpStatus.isSignup)
-      console.log("condition")
-    history.push(AppRoutes.SIGNUP)
+      history.push(AppRoutes.SIGNUP)
     clearState()
   }, [props.signUpStatus.isSignup])
   const clearState = () => {
-    // console.log("hello")
     setInputs({});
 
   }
   const handleSubmit = (event) => {
     if (event) {
-      const data = {
-        ...inputs
-      }
-      // var data = new FormData(event.target)
+      // const data = {
+      //   ...inputs
+      // }
+      var data = new FormData(event.target)
       event.preventDefault();
       props.onSignUP(data)
     }
-    console.log(props.signUpStatus)
-    // if (props.loginStatus.isLoggedIn) {
-    //   console.log("Hello")
-    // }
   }
-  console.log(inputs)
+  const onUploadImage = (e) => {
+    const reader = new FileReader();
+    let file = e.target.files ? e.target.files[0] : ""
+    reader.onloadend = async (e) => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const text = (e.target.result)
+        setPreviewImage(text)
+        setUserImage(file)
+      };
+    }
+    reader.readAsDataURL(file)
+  }
+  // console.log(previewImage)
+  console.log(isLoading, 'isLoading')
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -122,6 +162,21 @@ const SignUP = (props) => {
             value={inputs.lastName}
             onChange={handleInputChange}
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="profileImage"
+            label="Profile Image"
+            name="profileImage"
+            autoComplete="off"
+            autoFocus
+            // value={inputs.previewImage}
+            onChange={onUploadImage}
+            type="file"
+          />
+          {previewImage ? <img src={`${IMAGE_URL}${previewImage}`} /> : ""}
           <TextField
             variant="outlined"
             margin="normal"
@@ -171,9 +226,12 @@ const SignUP = (props) => {
             variant="contained"
             color="primary"
             className={classes.submit}
+
+            disabled={isLoading}
           >
             Sign Up
           </Button>
+          {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
           <Grid container>
             <Grid item xs>
               <Link href={AppRoutes.FORGOTPASSWORD} variant="body2">

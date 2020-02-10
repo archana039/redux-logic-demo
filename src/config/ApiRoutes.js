@@ -59,6 +59,12 @@ const ApiRoutes = {
     method: "POST",
     authenticate: true,
   },
+  USERSTATUS: {
+    service: "/users",
+    url: "/userStatus/:id",
+    method: "PUT",
+    authenticate: true,
+  },
 };
 
 export default ApiRoutes;

@@ -1,10 +1,10 @@
 import { createLogic } from 'redux-logic';
-import { usersListReq, usersListFailure, usersListSuccess, editUserReq, editUserSuccess, deleteUserReq, deleteUserSuccess, deleteUserFailure } from '../action';
+import { usersListReq, usersListFailure, usersListSuccess, editUserReq, editUserSuccess, deleteUserReq, deleteUserSuccess, deleteUserFailure, userStatusReq, userStatusSuccess } from '../action';
 import { toast } from "react-toastify";
 import { ApiHelper } from '../config/ApiHealper'
 import ApiRoutes from '../config/ApiRoutes'
 
- const UsersListLogic = createLogic({
+const UsersListLogic = createLogic({
   type: usersListReq,
   // your code here, hook into one or more of these execution
   // phases: validate, transform, and/or process
@@ -15,7 +15,7 @@ import ApiRoutes from '../config/ApiRoutes'
       ApiRoutes.GETUSERSLIST.url,
       ApiRoutes.GETUSERSLIST.method,
       ApiRoutes.GETUSERSLIST.authenticate,
-      undefined,
+      { skip: action.payload.skip, limit: action.payload.limit },
       action.payload
     );
     console.log(result, 'result')
@@ -39,7 +39,7 @@ import ApiRoutes from '../config/ApiRoutes'
 
 // Edit users logic
 
- const EditUserLogic = createLogic({
+const EditUserLogic = createLogic({
   type: editUserReq,
   // your code here, hook into one or more of these execution
   // phases: validate, transform, and/or process
@@ -101,8 +101,40 @@ const DeleteUserLogic = createLogic({
     // call done when finished dispatching
   }
 });
-export const AllUserLogic=[
+
+const UserStatusLogic = createLogic({
+  type: userStatusReq,
+  // your code here, hook into one or more of these execution
+  // phases: validate, transform, and/or process
+  async process({ getState, action }, dispatch, done) {
+    console.log(ApiRoutes.USERSTATUS.url)
+    const result = await new ApiHelper().FetchFromServer(
+      ApiRoutes.USERSTATUS.service,
+      ApiRoutes.USERSTATUS.url.replace(action.payload.id),
+      ApiRoutes.USERSTATUS.method,
+      ApiRoutes.USERSTATUS.authenticate,
+      undefined,
+      action.payload
+    );
+    if (result.data && result.isError === false) {
+      dispatch(userStatusSuccess(result.data))
+      localStorage.setItem("token", result.data.token)
+      toast.success(result.data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else {
+      toast.error(result.messages[0], {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      // dispatch(())
+    }
+    done()
+    // call done when finished dispatching
+  }
+});
+export const AllUserLogic = [
   UsersListLogic,
   EditUserLogic,
+  UserStatusLogic,
   DeleteUserLogic
 ]

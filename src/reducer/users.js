@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { usersActionType } from '../action'
-const initialStates = { isLoading: false, usersList: false }
+const initialStates = { isLoading: false, usersList: false, status: false }
 const UsersListReducer = handleActions(
   {
     [usersActionType.USERSLIST_REQUEST]: (state = initialStates, action) => ({
@@ -40,12 +40,27 @@ const UsersListReducer = handleActions(
     [usersActionType.DELETEUSER_SUCCESS]: (state = initialStates, action) => ({
       ...state,
       isLoading: false,
-      usersList: true,
       data: action.payload
     }),
     [usersActionType.DELETEUSER_FAILURE]: (state = initialStates, action) => ({
       ...state,
       isLoading: false,
+      usersList: true
+    }),
+    [usersActionType.USERSTATUS_REQUEST]: (state = initialStates, action) => ({
+      ...state,
+      isLoading: true
+    }),
+    [usersActionType.USERSTATUS_SUCCESS]: (state = initialStates, action) => ({
+      ...state,
+      isLoading: false,
+      userStatus: true,
+      data: action.payload
+    }),
+    [usersActionType.USERSTIAUS_FAILURE]: (state = initialStates, action) => ({
+      ...state,
+      isLoading: false,
+      userStatus: true,
       usersList: true
     }),
   },
