@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ForgotPassword = (props) => {
+  const {forgotPasswordReducer} = props
   let history = useHistory()
   const classes = useStyles();
   // const [email, setEmail] = useState('');
@@ -68,7 +69,7 @@ const ForgotPassword = (props) => {
       // history.push(AppRoutes.DASHBOARD)
       clearState()
     }
-  }, [props.forgotPasswordReducer.forgotPassword])
+  }, [forgotPasswordReducer.forgotPassword])
   const clearState = () => {
     setInputs({});
   }

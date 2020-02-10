@@ -47,6 +47,18 @@ const ApiRoutes = {
     method: "GET",
     authenticate: true,
   },
+  EDITUSER: {
+    service: "/users",
+    url: "/edituser",
+    method: "POST",
+    authenticate: true,
+  },
+  DELETEUSER: {
+    service: "/users",
+    url: "/deleteuser",
+    method: "POST",
+    authenticate: true,
+  },
 };
 
 export default ApiRoutes;

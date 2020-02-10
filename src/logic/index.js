@@ -6,7 +6,7 @@ import { ResetPasswordLogic } from './resetpassword'
 // import { AllBlogLogic } from './blogType'
 // import { SearchLogic } from './search'
 import { LinkVerificationLogic } from './linkverification'
-import { UsersListLogic } from './users'
+import { AllUserLogic } from './users'
 export const AllLogics = [
   LoginLogic,
   SignUpLogic,
@@ -16,5 +16,5 @@ export const AllLogics = [
   ChangePasswordLogic,
   ResetPasswordLogic,
   LinkVerificationLogic,
-  UsersListLogic
+  ...AllUserLogic
 ]
