@@ -26,6 +26,7 @@ const UsersListLogic = createLogic({
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
+      console.log(result.messages[0],"jjjjjjjjjjjjj")
       toast.error(result.messages[0], {
         position: toast.POSITION.TOP_RIGHT,
       });
@@ -83,7 +84,7 @@ const DeleteUserLogic = createLogic({
       ApiRoutes.DELETEUSER.method,
       ApiRoutes.DELETEUSER.authenticate,
       undefined,
-      action.payload
+      {id:action.payload}
     );
     if (result.data && result.isError === false) {
       dispatch(deleteUserSuccess(result.data))

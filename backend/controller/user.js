@@ -74,10 +74,10 @@ const EditUserList = async (req, res) => {
 
 const DeleteUser = async (req, res) => {
   try {
-    const { body: { _id } } = req
-    const result = await User.update(
+    const { body: { id } } = req
+    const result = await User.updateMany(
       {
-        _id: _id
+        _id:{ $in:id}
       },
       {
         $set: {
@@ -85,6 +85,7 @@ const DeleteUser = async (req, res) => {
         }
       }
     )
+    console.log(result)
     if (result) {
       return res.status(200).json({
         message: "User deleted successfully",
@@ -103,14 +104,15 @@ const DeleteUser = async (req, res) => {
 const UserStatus = async (req, res) => {
   try {
     const { body: { isActive, id } } = req
-    const result = await User.update(
-      { _id: id },
+    const result = await User.updateMany(
+      { _id: {$in:id} },
       {
         $set: {
           isActive
         }
       }
     )
+    console.log(result)
     if (result) {
       return res.status(200).json({
         message: "Status Updated successfully",

@@ -7,10 +7,7 @@ import AlertDialog from '../component/alertbox.js'
 import { IMAGE_URL } from "../config/AppConfig";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import moment from 'moment'
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -35,6 +32,7 @@ const UsersList = (props) => {
   const [data, setData] = useState({})
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
+  const [id, setId] =useState([])
   const [state, setState] = useState({
     columns: [
       { title: "Profile Image", field: "profileImage", render: rowData => <img src={`${IMAGE_URL}${rowData.profileImage}`} style={{ width: 50, borderRadius: '50%' }} />, type: 'file', filtering: false },
@@ -52,10 +50,16 @@ const UsersList = (props) => {
       },
     ],
     data:
-      usersList
+      usersList.map(value=>(
+        {
+          ...value,
+          createdAt:moment(value.createdAt).format("dd-mm-yy")
+        }
+      ))
     ,
 
   });
+  console.log(state,'state')
   const handleClickOpen = (data) => {
     console.log("click", data)
     setDialog(true)
@@ -110,6 +114,9 @@ const UsersList = (props) => {
   //   }
   // }, [!props.deleteUserReducer.isLoading])
   console.log(props.usersListReducer.isLoading, 'kkkkkkkkkkkkk')
+  const onbulckOperation =(rows)=>{
+    setId(rows.map(value => value._id))
+  }
   return (
     <>
       {props.usersListReducer.isLoading ? <div className={classes.root}>
@@ -128,13 +135,13 @@ const UsersList = (props) => {
           filtering: true, selection: true,
           // selectionProps: rowData => alert(rowData)
         }}
-        onSelectionChange={(rows) => alert('You selected ' + rows + ' rows')}
+        onSelectionChange={(rows) => onbulckOperation(rows)}
 
         actions={[
           {
             tooltip: 'Remove All Selected Users',
             icon: 'delete',
-            onClick: (evt, data) => alert('You want to delete ' + evt + ' rows')
+            onClick: (evt, data) => props.onDeleteUser(id)
           },
           {
             tooltip: 'Remove All Selected Users',
@@ -144,12 +151,12 @@ const UsersList = (props) => {
           {
             tooltip: 'Remove All Selected Users',
             icon: 'Active',
-            onClick: (evt, data) => alert('You want to delete ' + data.length + ' rows')
+            onClick: (evt, data) => props.onUserStatus({id,isActive:true})
           },
           {
             tooltip: 'Remove All Selected Users',
             icon: 'Deactive',
-            onClick: (evt, data) => alert('You want to delete ' + data.length + ' rows')
+            onClick: (evt, data) => props.onUserStatus({id,isActive:false})
           }
         ]}
 
@@ -189,7 +196,7 @@ const UsersList = (props) => {
                   data.splice(data.indexOf(oldData), 1);
                   return { ...prevState, data };
                 });
-                props.onDeleteUser(oldData)
+                props.onDeleteUser([oldData._id])
               }, 600);
             }),
         }}
