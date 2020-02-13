@@ -5,13 +5,20 @@ const ValidationFormatter = require('../helper/validationFormatter')
 
 const UserList = async (req, res) => {
   try {
-    const { query: { skip, limit } } = req
+    const { query: { skip, limit,search } } = req
     let condition = {
       isDelete: false,
     }
     let sortCondition = {
       createdAt: -1
     }
+    if (search) {
+			condition = {
+				...condition, firstName: {
+					$regex: new RegExp(search.trim(), 'i'),
+				}
+			}
+		}
     const result = await User.find(condition).skip(parseInt(skip)).limit(parseInt(limit))
     console.log(result, 'result')
     if (result) {
@@ -22,6 +29,7 @@ const UserList = async (req, res) => {
       })
     }
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       messsage: "Unexpected error occured",
       status: false

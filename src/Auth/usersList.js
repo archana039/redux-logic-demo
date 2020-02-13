@@ -8,6 +8,10 @@ import { IMAGE_URL } from "../config/AppConfig";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
+import {AppRoutes} from '../config/AppRoutes'
+import {useLocation} from 'react-router-dom'
+import * as queryString from 'query-string';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -24,24 +28,25 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
   },
 }));
-
 const UsersList = (props) => {
   const classes = useStyles();
   const [usersList, setUserList] = useState([])
+  const {search}=useLocation()
   const [openDialog, setDialog] = useState(false)
   const [data, setData] = useState({})
   const [skip, setSkip] = useState(0)
   const [limit, setLimit] = useState(10)
   const [id, setId] =useState([])
+  
   const [state, setState] = useState({
     columns: [
-      { title: "Profile Image", field: "profileImage", render: rowData => <img src={`${IMAGE_URL}${rowData.profileImage}`} style={{ width: 50, borderRadius: '50%' }} />, type: 'file', filtering: false },
+      { title: "Profile Image", field: "profileImage", render: rowData => <img src={`${IMAGE_URL}${rowData.profileImage}`} style={{ width: 50, borderRadius: '50%' }} />, type: 'file', filtering: false, searchable :false},
 
-      { title: 'Name', field: 'firstName', customFilterAndSearch: (term, rowData) => term == console.log(term === rowData.firstName, term, rowData.firstName) },
-      { title: 'Surname', field: 'lastName', filtering: false },
-      { title: 'Email', field: 'email', filtering: false },
-      { title: 'Created Date', field: 'createdAt', filtering: false },
-      { title: 'Updated Date', field: 'updatedAt', filtering: false },
+      { title: 'Name', field: 'firstName', customFilterAndSearch: (term, rowData) => handleSearch(term) },
+      { title: 'Surname', field: 'lastName', filtering: false,searchable :false },
+      { title: 'Email', field: 'email', filtering: false,searchable :false },
+      { title: 'Created Date', field: 'createdAt', filtering: false , searchable :false},
+      { title: 'Updated Date', field: 'updatedAt', filtering: false , searchable :false},
       {
         title: 'Status', field: 'status', editable: 'never', lookup: { true: 'Active', false: 'Deactive' },
         render: rowData => <Button variant="contained" color={`${rowData.isActive ? 'primary' : "secondary"}`} onClick={() => handleClickOpen(rowData)} >
@@ -50,15 +55,33 @@ const UsersList = (props) => {
       },
     ],
     data:
-      usersList.map(value=>(
-        {
-          ...value,
-          createdAt:moment(value.createdAt).format("dd-mm-yy")
-        }
-      ))
+      usersList
     ,
 
   });
+  const handleSearch =(param)=>{
+
+    let url =`${AppRoutes.USERSLIST}?search=${param}`
+    props.history.push(url)
+ }
+
+ useEffect(()=>{
+  let searchparam =queryString.parse(search)
+  console.log(searchparam)
+  let data ={
+    skip,limit,search:searchparam.search
+  }
+  if(searchparam.search.length>=3)
+  props.onGetusersList(data)
+
+},[search])
+useEffect(()=>{
+  let data ={
+    skip,limit,
+  }
+  props.onGetusersList(data)
+
+},[])
   console.log(state,'state')
   const handleClickOpen = (data) => {
     console.log("click", data)
@@ -74,15 +97,8 @@ const UsersList = (props) => {
     }
     setDialog(false)
   }
-  useEffect(() => {
-    let data = {
-      skip, limit
-    }
-    props.onGetusersList(data)
-  }, [])
 
   useEffect(() => {
-    console.log(props)
     if (props.usersListReducer && props.usersListReducer.usersList && props.usersListReducer.data) {
       console.log(props.usersListReducer.data.data, 'props.usersListReducer.data.data')
       setUserList(props.usersListReducer.data.data);
@@ -93,6 +109,7 @@ const UsersList = (props) => {
 
     }
   }, [props.usersListReducer.usersList])
+  
   useEffect(() => {
     if (props.usersListReducer.userStatus && props.usersListReducer.data) {
       let result = state.data
@@ -113,7 +130,6 @@ const UsersList = (props) => {
 
   //   }
   // }, [!props.deleteUserReducer.isLoading])
-  console.log(props.usersListReducer.isLoading, 'kkkkkkkkkkkkk')
   const onbulckOperation =(rows)=>{
     setId(rows.map(value => value._id))
   }
@@ -128,9 +144,7 @@ const UsersList = (props) => {
         title="Editable Example"
         columns={state.columns}
         data={state.data}
-        options={{
-          search: true
-        }}
+        
         options={{
           filtering: true, selection: true,
           // selectionProps: rowData => alert(rowData)

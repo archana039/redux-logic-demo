@@ -15,8 +15,8 @@ const UsersListLogic = createLogic({
       ApiRoutes.GETUSERSLIST.url,
       ApiRoutes.GETUSERSLIST.method,
       ApiRoutes.GETUSERSLIST.authenticate,
-      { skip: action.payload.skip, limit: action.payload.limit },
-      action.payload
+      action.payload,
+      undefined
     );
     console.log(result, 'result')
     if (result.data && result.isError === false) {
